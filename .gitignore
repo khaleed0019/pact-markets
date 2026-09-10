@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Hardhat
+artifacts/
+cache/
+typechain-types/
+
+# Env — never commit real secrets or the deployed address alongside a private key
+.env
+.env.local
+.env*.local
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Logs
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
