@@ -8,6 +8,7 @@ import { WalletButton } from '@/components/WalletButton'
 import { Button } from '@/components/ui/Button'
 import { PredictionTimeline } from '@/components/PredictionTimeline'
 import { OutcomeBadge } from '@/components/OutcomeBadge'
+import { CriteriaInsight } from '@/components/CriteriaInsight'
 import { usePrediction, useRevealPrediction, useResolvePrediction, useRevealedContent } from '@/lib/chain/useRegistry'
 import { readStoredSalt } from '@/lib/predictions/commitment'
 import { deriveLifecycle } from '@/lib/predictions/types'
@@ -138,6 +139,14 @@ export default function ProofPage({ params }: { params: Promise<{ id: string }> 
           {storedSalt?.reasoning || revealedContent?.reasoning}
         </p>
       )}
+
+      {(() => {
+        const revealedText = storedSalt?.text ?? revealedContent?.text
+        const revealedCriteria = storedSalt?.criteria ?? revealedContent?.criteria
+        return revealedText && revealedCriteria ? (
+          <CriteriaInsight text={revealedText} criteria={revealedCriteria} />
+        ) : null
+      })()}
 
       {selfResolved && (
         <p className="mt-2 text-[0.75rem] leading-relaxed text-chalk-faint">

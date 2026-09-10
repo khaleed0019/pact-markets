@@ -11,6 +11,7 @@ import { useCommitPrediction, useRevealPrediction } from '@/lib/chain/useRegistr
 import { computeCommitment, randomSalt, storeSalt } from '@/lib/predictions/commitment'
 import { explorerTxUrl } from '@/lib/chain/monad'
 import { CATEGORIES, type Category, type Visibility } from '@/lib/predictions/types'
+import { CriteriaInsight } from '@/components/CriteriaInsight'
 import { PACT_REGISTRY_ABI } from '@/lib/chain/abi'
 import { decodeEventLog, type Hex } from 'viem'
 import { usePublicClient } from 'wagmi'
@@ -247,6 +248,7 @@ export default function CreatePage() {
 
           <ReviewRow label="Prediction" value={text} />
           <ReviewRow label="Resolution criteria" value={criteria} />
+          <CriteriaInsight text={text} criteria={criteria} />
           <ReviewRow label="Category" value={category} />
           <ReviewRow label="Confidence" value={`${confidence}%`} />
           <ReviewRow label="Resolves" value={new Date(resolvesAtSeconds * 1000).toLocaleDateString()} />

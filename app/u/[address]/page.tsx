@@ -9,6 +9,7 @@ import { PredictionCard } from '@/components/PredictionCard'
 import { useAllPredictions } from '@/lib/chain/useAllPredictions'
 import { predictionsFor } from '@/lib/predictions/aggregate'
 import { computePactScore, currentStreak, type ScoredPrediction } from '@/lib/predictions/score'
+import { TrackRecordSummary } from '@/components/TrackRecordSummary'
 import { explorerAddressUrl, PACT_REGISTRY_ADDRESS } from '@/lib/chain/monad'
 import type { Prediction } from '@/lib/predictions/types'
 
@@ -84,6 +85,8 @@ export default function ProfilePage({ params }: { params: Promise<{ address: str
           icon={streak > 1 ? Flame : undefined}
         />
       </section>
+
+      <TrackRecordSummary score={score} streak={streak} />
 
       {score.excludedSelfResolved > 0 && (
         <div className="mt-4 flex items-start gap-2 rounded-xl border border-signal-pending/25 bg-signal-pending/5 px-4 py-3">
