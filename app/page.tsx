@@ -15,7 +15,15 @@ export default function Home() {
     <main>
       <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
         <span className="text-heading font-bold tracking-tight text-chalk">PACT MARKETS</span>
-        <WalletButton />
+        <nav className="flex items-center gap-4">
+          <Link href="/markets" className="hidden text-small text-chalk-muted active:text-chalk sm:inline">
+            Discover
+          </Link>
+          <Link href="/leaderboard" className="hidden text-small text-chalk-muted active:text-chalk sm:inline">
+            Leaderboard
+          </Link>
+          <WalletButton />
+        </nav>
       </header>
 
       {/* --- hero ------------------------------------------------------------------ */}

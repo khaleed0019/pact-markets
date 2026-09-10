@@ -7,6 +7,7 @@ import { ArrowLeft, Copy, Check, ExternalLink, ShieldAlert, Gavel } from 'lucide
 import { WalletButton } from '@/components/WalletButton'
 import { Button } from '@/components/ui/Button'
 import { PredictionTimeline } from '@/components/PredictionTimeline'
+import { OutcomeBadge } from '@/components/OutcomeBadge'
 import { usePrediction, useRevealPrediction, useResolvePrediction, useRevealedContent } from '@/lib/chain/useRegistry'
 import { readStoredSalt } from '@/lib/predictions/commitment'
 import { deriveLifecycle } from '@/lib/predictions/types'
@@ -208,20 +209,6 @@ export default function ProofPage({ params }: { params: Promise<{ id: string }> 
       </section>
     </main>
   )
-}
-
-function OutcomeBadge({ outcome, lifecycle }: { outcome: Outcome; lifecycle: string }) {
-  const map: Record<Outcome, { label: string; className: string }> = {
-    UNRESOLVED: {
-      label: lifecycle === 'WAITING' ? 'Awaiting resolution' : 'Locked',
-      className: 'border-signal-pending/30 bg-signal-pending/10 text-signal-pending',
-    },
-    CORRECT: { label: 'Correct', className: 'border-signal-correct/30 bg-signal-correct/10 text-signal-correct' },
-    INCORRECT: { label: 'Incorrect', className: 'border-signal-incorrect/30 bg-signal-incorrect/10 text-signal-incorrect' },
-    VOID: { label: 'Void', className: 'border-signal-void/30 bg-signal-void/10 text-signal-void' },
-  }
-  const { label, className } = map[outcome]
-  return <span className={cn('rounded-full border px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-wider', className)}>{label}</span>
 }
 
 function Row({ label, value, link, mono }: { label: string; value: string; link?: string; mono?: boolean }) {
