@@ -36,6 +36,7 @@ export async function POST(request: Request) {
     if (cause instanceof AIUnavailableError) {
       return NextResponse.json({ error: 'not_configured' }, { status: 503 })
     }
+    console.error('[intelligence/summary]', cause)
     return NextResponse.json({ error: 'AI analysis failed.' }, { status: 502 })
   }
 }

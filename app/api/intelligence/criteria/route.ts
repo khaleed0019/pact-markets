@@ -33,6 +33,10 @@ export async function POST(request: Request) {
     if (cause instanceof AIUnavailableError) {
       return NextResponse.json({ error: 'not_configured' }, { status: 503 })
     }
+    // Logged server-side only, and never the request itself (which is all this route ever
+    // sends) — safe to log in full, and the only way to diagnose a failure a judge sees as
+    // a bare 502 with no other detail.
+    console.error('[intelligence/criteria]', cause)
     return NextResponse.json({ error: 'AI analysis failed.' }, { status: 502 })
   }
 }
