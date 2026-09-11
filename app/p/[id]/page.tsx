@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button'
 import { PredictionTimeline } from '@/components/PredictionTimeline'
 import { OutcomeBadge } from '@/components/OutcomeBadge'
 import { CriteriaInsight } from '@/components/CriteriaInsight'
+import { ShareProofButton } from '@/components/ShareProofButton'
 import { usePrediction, useRevealPrediction, useResolvePrediction, useRevealedContent } from '@/lib/chain/useRegistry'
 import { readStoredSalt } from '@/lib/predictions/commitment'
 import { deriveLifecycle } from '@/lib/predictions/types'
@@ -147,6 +148,8 @@ export default function ProofPage({ params }: { params: Promise<{ id: string }> 
           <CriteriaInsight text={revealedText} criteria={revealedCriteria} />
         ) : null
       })()}
+
+      <ShareProofButton id={prediction.id} outcome={prediction.outcome} text={storedSalt?.text ?? revealedContent?.text ?? null} />
 
       {selfResolved && (
         <p className="mt-2 text-[0.75rem] leading-relaxed text-chalk-faint">
