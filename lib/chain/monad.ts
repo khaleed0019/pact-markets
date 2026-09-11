@@ -28,6 +28,18 @@ export const monadTestnet = defineChain({
 /** Set once, after a real `npm run deploy:monad` — never a placeholder address. */
 export const PACT_REGISTRY_ADDRESS = process.env.NEXT_PUBLIC_PACT_REGISTRY_ADDRESS as `0x${string}` | undefined
 
+/**
+ * The block the contract was actually deployed at — the floor for every event scan.
+ * Without this, every `getContractEvents` call defaults to `fromBlock: 0n`, and Monad
+ * testnet is already past block 60,000,000: a public RPC not only caps `eth_getLogs` at
+ * a 100-block window per call (see getLogsChunked.ts) but doesn't retain state that far
+ * back at all. Scanning from genesis was never viable; scanning from deployment is both
+ * correct (nothing the contract could have emitted exists before it did) and cheap.
+ */
+export const PACT_REGISTRY_DEPLOY_BLOCK = process.env.NEXT_PUBLIC_PACT_REGISTRY_DEPLOY_BLOCK
+  ? BigInt(process.env.NEXT_PUBLIC_PACT_REGISTRY_DEPLOY_BLOCK)
+  : 0n
+
 export function explorerTxUrl(hash: string): string {
   return `${monadTestnet.blockExplorers.default.url}/tx/${hash}`
 }

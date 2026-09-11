@@ -1,6 +1,7 @@
 import { createPublicClient, http } from 'viem'
-import { monadTestnet, PACT_REGISTRY_ADDRESS } from './monad.ts'
+import { monadTestnet, PACT_REGISTRY_ADDRESS, PACT_REGISTRY_DEPLOY_BLOCK } from './monad.ts'
 import { PACT_REGISTRY_ABI } from './abi.ts'
+import { getContractEventsChunked } from './getLogsChunked.ts'
 import { OUTCOMES, VISIBILITIES, type Outcome, type Visibility } from '../predictions/types.ts'
 
 /**
@@ -36,13 +37,12 @@ export async function readPredictionForCard(id: bigint): Promise<ServerPredictio
 
     let text: string | null = null
     if (p.revealed) {
-      const logs = await c.getContractEvents({
+      const logs = await getContractEventsChunked(c, {
         address: PACT_REGISTRY_ADDRESS,
         abi: PACT_REGISTRY_ABI,
         eventName: 'Revealed',
         args: { id },
-        fromBlock: 0n,
-        toBlock: 'latest',
+        fromBlock: PACT_REGISTRY_DEPLOY_BLOCK,
       })
       const last = logs.at(-1)
       if (last && 'args' in last) {

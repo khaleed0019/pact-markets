@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt, usePublicClient } from 'wagmi'
 import { PACT_REGISTRY_ABI } from './abi.ts'
-import { PACT_REGISTRY_ADDRESS } from './monad.ts'
+import { PACT_REGISTRY_ADDRESS, PACT_REGISTRY_DEPLOY_BLOCK } from './monad.ts'
+import { getContractEventsChunked } from './getLogsChunked.ts'
 import type { Hex } from 'viem'
 import type { Category, Outcome, PredictionOnChain, Visibility } from '../predictions/types.ts'
 import { CATEGORIES } from '../predictions/types.ts'
@@ -149,15 +150,13 @@ export function useRevealedContent(id: bigint | undefined) {
     }
     let cancelled = false
     setLoading(true)
-    publicClient
-      .getContractEvents({
-        address: PACT_REGISTRY_ADDRESS,
-        abi: PACT_REGISTRY_ABI,
-        eventName: 'Revealed',
-        args: { id },
-        fromBlock: 0n,
-        toBlock: 'latest',
-      })
+    getContractEventsChunked(publicClient, {
+      address: PACT_REGISTRY_ADDRESS,
+      abi: PACT_REGISTRY_ABI,
+      eventName: 'Revealed',
+      args: { id },
+      fromBlock: PACT_REGISTRY_DEPLOY_BLOCK,
+    })
       .then((logs) => {
         if (cancelled) return
         const last = logs.at(-1)

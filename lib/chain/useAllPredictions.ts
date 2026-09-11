@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import { usePublicClient } from 'wagmi'
 import { PACT_REGISTRY_ABI } from './abi.ts'
-import { PACT_REGISTRY_ADDRESS } from './monad.ts'
+import { PACT_REGISTRY_ADDRESS, PACT_REGISTRY_DEPLOY_BLOCK } from './monad.ts'
+import { getContractEventsChunked } from './getLogsChunked.ts'
 import { CATEGORIES, deriveLifecycle, type Outcome, type Prediction, type Visibility } from '../predictions/types.ts'
 
 const VISIBILITY_LABEL: Visibility[] = ['OPEN', 'SEALED']
@@ -40,26 +41,23 @@ export function useAllPredictions() {
     async function load() {
       try {
         const [committedLogs, revealedLogs, resolvedLogs] = await Promise.all([
-          publicClient!.getContractEvents({
-            address: PACT_REGISTRY_ADDRESS,
+          getContractEventsChunked(publicClient!, {
+            address: PACT_REGISTRY_ADDRESS!,
             abi: PACT_REGISTRY_ABI,
             eventName: 'Committed',
-            fromBlock: 0n,
-            toBlock: 'latest',
+            fromBlock: PACT_REGISTRY_DEPLOY_BLOCK,
           }),
-          publicClient!.getContractEvents({
-            address: PACT_REGISTRY_ADDRESS,
+          getContractEventsChunked(publicClient!, {
+            address: PACT_REGISTRY_ADDRESS!,
             abi: PACT_REGISTRY_ABI,
             eventName: 'Revealed',
-            fromBlock: 0n,
-            toBlock: 'latest',
+            fromBlock: PACT_REGISTRY_DEPLOY_BLOCK,
           }),
-          publicClient!.getContractEvents({
-            address: PACT_REGISTRY_ADDRESS,
+          getContractEventsChunked(publicClient!, {
+            address: PACT_REGISTRY_ADDRESS!,
             abi: PACT_REGISTRY_ABI,
             eventName: 'Resolved',
-            fromBlock: 0n,
-            toBlock: 'latest',
+            fromBlock: PACT_REGISTRY_DEPLOY_BLOCK,
           }),
         ])
         if (cancelled) return
