@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt, usePublicClient } from 'wagmi'
-import { PACT_REGISTRY_ABI } from './abi'
-import { PACT_REGISTRY_ADDRESS } from './monad'
+import { PACT_REGISTRY_ABI } from './abi.ts'
+import { PACT_REGISTRY_ADDRESS } from './monad.ts'
 import type { Hex } from 'viem'
-import type { Category, Outcome, PredictionOnChain, Visibility } from '../predictions/types'
-import { CATEGORIES } from '../predictions/types'
+import type { Category, Outcome, PredictionOnChain, Visibility } from '../predictions/types.ts'
+import { CATEGORIES } from '../predictions/types.ts'
 
 const VISIBILITY_CODE: Record<Visibility, number> = { OPEN: 0, SEALED: 1 }
 const CATEGORY_CODE: Record<Category, number> = Object.fromEntries(

@@ -6,7 +6,8 @@ import { useAccount } from 'wagmi'
 import { ArrowLeft, Flame, ShieldAlert } from 'lucide-react'
 import { WalletButton } from '@/components/WalletButton'
 import { PredictionCard } from '@/components/PredictionCard'
-import { useAllPredictions } from '@/lib/chain/useAllPredictions'
+import { useMarketData } from '@/lib/chain/useMarketData'
+import { DemoBanner, DemoToggleOn } from '@/components/DemoMode'
 import { predictionsFor } from '@/lib/predictions/aggregate'
 import { computePactScore, currentStreak, type ScoredPrediction } from '@/lib/predictions/score'
 import { TrackRecordSummary } from '@/components/TrackRecordSummary'
@@ -38,7 +39,7 @@ export default function ProfilePage({ params }: { params: Promise<{ address: str
   const { address: rawAddress } = use(params)
   const address = rawAddress as `0x${string}`
   const { address: viewer } = useAccount()
-  const { predictions, loading, error } = useAllPredictions()
+  const { predictions, loading, error, demoMode } = useMarketData()
 
   const mine = predictionsFor(predictions, address)
   const scored = mine.map(toScored)
@@ -101,13 +102,17 @@ export default function ProfilePage({ params }: { params: Promise<{ address: str
       <h2 className="mt-7 text-micro font-semibold uppercase tracking-wider text-chalk-faint">
         All predictions ({mine.length})
       </h2>
-      <div className="mt-3 space-y-2.5">
-        {!PACT_REGISTRY_ADDRESS && (
-          <EmptyNotice title="Contract not deployed yet" body="Run npm run deploy:monad, or check .env.local." />
+      <div className="mt-3">
+        <DemoBanner />
+        <DemoToggleOn />
+      </div>
+      <div className="space-y-2.5">
+        {!demoMode && !PACT_REGISTRY_ADDRESS && (
+          <EmptyNotice title="Contract not deployed yet" body="Run npm run deploy:monad, check .env.local, or turn on Demo mode above." />
         )}
-        {PACT_REGISTRY_ADDRESS && loading && <div className="h-28 animate-pulse rounded-2xl bg-white/[0.03]" />}
-        {PACT_REGISTRY_ADDRESS && error && <EmptyNotice title="Couldn't load this profile" body={error.message} />}
-        {PACT_REGISTRY_ADDRESS && !loading && !error && mine.length === 0 && (
+        {(demoMode || PACT_REGISTRY_ADDRESS) && loading && <div className="h-28 animate-pulse rounded-2xl bg-white/[0.03]" />}
+        {(demoMode || PACT_REGISTRY_ADDRESS) && error && <EmptyNotice title="Couldn't load this profile" body={error.message} />}
+        {(demoMode || PACT_REGISTRY_ADDRESS) && !loading && !error && mine.length === 0 && (
           <EmptyNotice title="No predictions yet" body="Nothing committed by this address on this contract." />
         )}
         {mine.map((p) => (

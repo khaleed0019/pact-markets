@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, Lock, Eye, ShieldCheck, Zap } from 'lucide-react'
+import { ArrowRight, Lock, Eye, ShieldCheck, Zap, FlaskConical } from 'lucide-react'
 import { WalletButton } from '@/components/WalletButton'
 
 /**
@@ -54,6 +54,13 @@ export default function Home() {
             </button>
           </Link>
         </div>
+        <Link
+          href="/markets?demo=1"
+          className="mt-4 inline-flex items-center gap-1.5 text-[0.75rem] text-chalk-faint underline decoration-white/20 underline-offset-4"
+        >
+          <FlaskConical aria-hidden className="h-3 w-3" />
+          No wallet? Browse with sample data
+        </Link>
       </section>
 
       {/* --- how it works ------------------------------------------------------------ */}
@@ -100,7 +107,9 @@ export default function Home() {
       </section>
 
       <footer className="mx-auto max-w-6xl px-6 py-10 text-center text-[0.7rem] text-chalk-faint">
-        Built for the Monad Metropolis hackathon. Testnet only — nothing here moves real value.
+        Built for the Monad Metropolis hackathon — Trust, Identity &amp; AI Infrastructure track (an onchain
+        reputation system) and Social, Attention &amp; Culture (a cultural outcome market). Testnet only —
+        nothing here moves real value.
       </footer>
     </main>
   )

@@ -1,5 +1,5 @@
-import { computePactScore, currentStreak, type ScoredPrediction } from './score'
-import type { Prediction } from './types'
+import { computePactScore, currentStreak, type ScoredPrediction } from './score.ts'
+import type { Prediction } from './types.ts'
 
 /**
  * Turns a flat list of predictions (from `useAllPredictions`) into one row per author —

@@ -1,11 +1,13 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { Suspense, useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, Compass } from 'lucide-react'
 import { WalletButton } from '@/components/WalletButton'
 import { PredictionCard } from '@/components/PredictionCard'
-import { useAllPredictions } from '@/lib/chain/useAllPredictions'
+import { useMarketData } from '@/lib/chain/useMarketData'
+import { DemoBanner, DemoToggleOn, useDemoMode } from '@/components/DemoMode'
 import { CATEGORIES, type Category } from '@/lib/predictions/types'
 import { PACT_REGISTRY_ADDRESS } from '@/lib/chain/monad'
 import { cn } from '@/lib/cn'
@@ -15,11 +17,29 @@ type Filter = 'ALL' | Category
 /**
  * Discover Markets: every prediction ever committed on this contract, reconstructed
  * live from the event log by `useAllPredictions` — there is no separate feed to seed or
- * keep in sync, what's on chain is what's shown.
+ * keep in sync, what's on chain is what's shown. (Or, in Live Demo Mode, the labeled
+ * sample data from `useMarketData` — see components/DemoMode.tsx.)
  */
 export default function MarketsPage() {
-  const { predictions, loading, error } = useAllPredictions()
+  return (
+    <Suspense fallback={null}>
+      <MarketsPageInner />
+    </Suspense>
+  )
+}
+
+function MarketsPageInner() {
+  const { predictions, loading, error, demoMode } = useMarketData()
+  const { setDemoMode } = useDemoMode()
+  const searchParams = useSearchParams()
   const [filter, setFilter] = useState<Filter>('ALL')
+
+  // Lets the landing page's "browse with sample data" link turn demo mode on directly,
+  // rather than requiring a second click once someone lands here.
+  useEffect(() => {
+    if (searchParams.get('demo') === '1') setDemoMode(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
 
   const filtered = useMemo(() => {
     if (filter === 'ALL') return predictions
@@ -43,7 +63,12 @@ export default function MarketsPage() {
         Every prediction committed on this contract, live from the chain.
       </p>
 
-      <div className="mt-5 flex gap-2 overflow-x-auto pb-1">
+      <div className="mt-5">
+        <DemoBanner />
+        <DemoToggleOn />
+      </div>
+
+      <div className="flex gap-2 overflow-x-auto pb-1">
         <FilterPill active={filter === 'ALL'} onClick={() => setFilter('ALL')}>
           All
         </FilterPill>
@@ -55,23 +80,23 @@ export default function MarketsPage() {
       </div>
 
       <div className="mt-5 space-y-2.5">
-        {!PACT_REGISTRY_ADDRESS && (
+        {!demoMode && !PACT_REGISTRY_ADDRESS && (
           <EmptyNotice
             title="Contract not deployed yet"
-            body="NEXT_PUBLIC_PACT_REGISTRY_ADDRESS isn't set. Run npm run deploy:monad, or check .env.local."
+            body="NEXT_PUBLIC_PACT_REGISTRY_ADDRESS isn't set. Run npm run deploy:monad, check .env.local, or turn on Demo mode above."
           />
         )}
-        {PACT_REGISTRY_ADDRESS && loading && (
+        {(demoMode || PACT_REGISTRY_ADDRESS) && loading && (
           <>
             <div className="h-28 animate-pulse rounded-2xl bg-white/[0.03]" />
             <div className="h-28 animate-pulse rounded-2xl bg-white/[0.03]" />
             <div className="h-28 animate-pulse rounded-2xl bg-white/[0.03]" />
           </>
         )}
-        {PACT_REGISTRY_ADDRESS && error && (
+        {(demoMode || PACT_REGISTRY_ADDRESS) && error && (
           <EmptyNotice title="Couldn't load predictions" body={error.message} />
         )}
-        {PACT_REGISTRY_ADDRESS && !loading && !error && filtered.length === 0 && (
+        {(demoMode || PACT_REGISTRY_ADDRESS) && !loading && !error && filtered.length === 0 && (
           <EmptyNotice
             title={predictions.length === 0 ? 'No predictions yet' : 'Nothing in this category yet'}
             body={predictions.length === 0 ? 'Be the first to commit one.' : 'Try a different filter.'}

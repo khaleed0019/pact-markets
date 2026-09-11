@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { usePublicClient } from 'wagmi'
-import { PACT_REGISTRY_ABI } from './abi'
-import { PACT_REGISTRY_ADDRESS } from './monad'
-import { CATEGORIES, deriveLifecycle, type Outcome, type Prediction, type Visibility } from '../predictions/types'
+import { PACT_REGISTRY_ABI } from './abi.ts'
+import { PACT_REGISTRY_ADDRESS } from './monad.ts'
+import { CATEGORIES, deriveLifecycle, type Outcome, type Prediction, type Visibility } from '../predictions/types.ts'
 
 const VISIBILITY_LABEL: Visibility[] = ['OPEN', 'SEALED']
 const OUTCOME_LABEL: Outcome[] = ['UNRESOLVED', 'CORRECT', 'INCORRECT', 'VOID']

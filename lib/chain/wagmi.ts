@@ -1,6 +1,6 @@
 import { createConfig, http } from 'wagmi'
 import { injected } from 'wagmi/connectors'
-import { monadTestnet } from './monad'
+import { monadTestnet } from './monad.ts'
 
 /**
  * `injected()` rather than a specific wallet connector: any EVM wallet extension works
