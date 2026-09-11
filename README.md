@@ -6,6 +6,10 @@ Built for the [Monad Metropolis Hackathon](https://www.monad.xyz/developers/hack
 **Trust, Identity & AI Infrastructure** (an onchain reputation system) and relevant to
 **Social, Attention & Culture** (a cultural outcome market).
 
+**Live:** [pact-markets.vercel.app](https://pact-markets.vercel.app) ·
+**Contract:** [`0x16C304A444066dc5Db96b5D9Cb0875186A9B2D5f`](https://testnet.monadscan.com/address/0x16C304A444066dc5Db96b5D9Cb0875186A9B2D5f)
+on Monad Testnet (chain 10143)
+
 ## The problem
 
 After something happens, anyone can say "I called it." There's normally no way to check whether the call existed
