@@ -8,7 +8,12 @@
  * world or about a prediction's outcome. This is analysis of data the app already
  * trusts, not a second source of truth.
  */
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash'
+// gemini-2.0-flash was retired; Google's own 404 for it names the direct replacement.
+// Confirmed live against the real API (not assumed) via the production error log this
+// project actually hit: {"error":{"code":404,"message":"This model
+// models/gemini-2.0-flash is no longer available. Please update your code to use
+// models/gemini-3.6-flash..."}}
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-3.6-flash'
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`
 
 export class AIUnavailableError extends Error {}
